@@ -11,7 +11,7 @@ type Todo = {
 
 function TodoList() {
   const { todos } = useGetTodo();
-  const { toggleTodo } = useTodoActions();
+  const { toggleTodo, removeTodo } = useTodoActions();
 
   const onToggle = (e: MouseEvent) => {
     const element = e.currentTarget as HTMLSpanElement;
@@ -20,13 +20,20 @@ function TodoList() {
     toggleTodo(parseInt(id));
   }
 
+  const onRemove = (e: MouseEvent) => {
+    const element = e.currentTarget as HTMLSpanElement;
+    const id = element.dataset.id || '';
+
+    removeTodo(parseInt(id));
+  }
+
   return (
     <div>
       <ul>
       {todos.map((todo: Todo) => (
         <li className={`TodoItem ${todo.complete ? 'done' : ''}`}>
           <span className='text' onClick={onToggle} data-id={todo.id}>{todo.text}</span>
-          <span>(X)</span>
+          <span className='del' onClick={onRemove} data-id={todo.id}>(X)</span>
         </li>
       ))}
     </ul>

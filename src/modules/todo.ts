@@ -1,8 +1,7 @@
-import TodoInsert from "../components/Todo/TodoInsert";
-
 ////// action
 const ADD_TODO = 'ADD_TODO' as const;
 const TOGGLE_TODO = 'TOGGLE_TODO' as const;
+const REMOVE_TODO = 'REMOVE_TODO' as const;
 
 export const addTodoAction = (text: string) => ({
   type: ADD_TODO,
@@ -12,10 +11,16 @@ export const toggleTodoAction = (id: number) => ({
   type: TOGGLE_TODO,
   payload: id,
 });
+export const removeTodoAction = (id: number) => ({
+  type: REMOVE_TODO,
+  payload: id,
+});
 
 type TodoAction =
   | ReturnType<typeof addTodoAction>
-  | ReturnType<typeof toggleTodoAction>;
+  | ReturnType<typeof toggleTodoAction>
+  | ReturnType<typeof removeTodoAction>;
+
 
 ////// reducer
 type ItemState = {
@@ -53,6 +58,12 @@ function todo(state: TodoState = initialState, action: TodoAction): TodoState {
       return {
         todos: state.todos.map(todo => {
           return todo.id === action.payload ? {...todo, complete: !todo.complete} : todo
+        })
+      };
+    case REMOVE_TODO:
+      return {
+        todos: state.todos.filter(todo => {
+          return todo.id !== action.payload 
         })
       };
     default:
